@@ -1,5 +1,5 @@
 from turtle import Turtle
-from constants import *
+from helpers import *
 
 
 class Paddle(Turtle):
@@ -12,6 +12,15 @@ class Paddle(Turtle):
         self.penup()
         self.goto(x_pos, 0)
         self.speed('fastest')
+        self.sound = 'paddle'
 
     def bounds(self):
         return self.ycor()-PADDLE_HEIGHT/2, self.ycor()+PADDLE_HEIGHT/2
+
+    def check_bounce(self, ball):
+        if is_close(ball.xcor(), self.xcor()):
+            n, s = self.bounds()
+            if n <= ball.ycor() <= s:
+                audio.play(self.sound)
+                return True
+        return False

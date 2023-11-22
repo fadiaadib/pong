@@ -3,7 +3,7 @@ from turtle import Screen
 import time
 
 from helpers import *
-from model.field import Field
+from model.board import Board
 from model.ball import Ball
 from model.player import Player
 from model.score_board import ScoreBoard
@@ -19,7 +19,7 @@ class Pong:
         self.screen.title(TITLE)
 
         # Create objects
-        self.field = Field()
+        self.board = Board()
         self.ball = Ball()
         self.score_board = ScoreBoard()
         self.players = []
@@ -38,10 +38,10 @@ class Pong:
 
     def key_bindings(self):
         self.screen.listen()
-        self.screen.onkey(self.players[1].up, 'Up')
-        self.screen.onkey(self.players[1].down, 'Down')
         self.screen.onkey(self.players[0].up, 'w')
         self.screen.onkey(self.players[0].down, 's')
+        self.screen.onkey(self.players[1].up, 'Up')
+        self.screen.onkey(self.players[1].down, 'Down')
 
     def play(self):
         on = True
@@ -53,13 +53,16 @@ class Pong:
             self.ball.move()
 
             # Bounce wall
-            self.ball.bounce_wall()
+            if self.board.check_bounce(self.ball):
+                self.ball.bounce('h')
+
             for player in self.players:
                 # Bounce paddle
-                self.ball.bounce_paddle(player)
+                if player.paddle.check_bounce(self.ball):
+                    self.ball.bounce('v')
 
                 # Check point
-                if is_close(self.ball.xcor(), player.point_bound):
+                if player.check_life(self.ball):
                     self.score_board.player_point(player)
                     self.ball.restart()
                     self.screen.update()

@@ -22,16 +22,12 @@ class Ball(Turtle):
             angle = random.randint(*BALL_ORIENT)
         self.setheading(angle)
 
-    def bounce_wall(self):
-        if is_close(self.ycor(), SCREEN_HEIGHT/2) or is_close(self.ycor(), -SCREEN_HEIGHT/2):
+    def bounce(self, orient):
+        if orient == 'v':
+            self.setheading(180 - self.heading())
+            self.speed += BALL_SPEED_INC
+        else:
             self.setheading(360 - self.heading())
-
-    def bounce_paddle(self, player):
-        if is_close(self.xcor(), player.paddle.xcor()):
-            n, s = player.paddle.bounds()
-            if n <= self.ycor() <= s:
-                self.setheading(180 - self.heading())
-                self.speed += BALL_SPEED_INC
 
     def move(self):
         self.forward(self.speed)

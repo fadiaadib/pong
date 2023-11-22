@@ -1,4 +1,4 @@
-from constants import *
+from helpers import *
 from model.paddle import Paddle
 
 
@@ -12,6 +12,7 @@ class Player:
             self.xcor = PADDLE_GAP - SCREEN_WIDTH / 2
             self.point_bound = SCREEN_WIDTH / 2
         self.paddle = Paddle(self.xcor)
+        self.sound = 'life'
 
     def up(self):
         if self.paddle.ycor() + PADDLE_HEIGHT/2 < SCREEN_HEIGHT/2:
@@ -20,3 +21,9 @@ class Player:
     def down(self):
         if self.paddle.ycor() - PADDLE_HEIGHT / 2 > -SCREEN_HEIGHT / 2:
             self.paddle.backward(PADDLE_SPEED)
+
+    def check_life(self, ball):
+        result = is_close(ball.xcor(), self.point_bound)
+        if result:
+            audio.play(self.sound)
+        return result
