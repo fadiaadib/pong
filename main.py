@@ -61,7 +61,7 @@ class Pong:
                 if player.paddle.check_bounce(self.ball):
                     self.ball.bounce('v')
 
-                # Check point
+                # Check life
                 if player.check_life(self.ball):
                     self.score_board.player_point(player)
                     self.ball.restart()
